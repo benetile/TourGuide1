@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Distance.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TourGuide</a> &gt; <a href="index.source.html" class="el_package">tourGuide.distance</a> &gt; <span class="el_source">Distance.java</span></div><h1>Distance.java</h1><pre class="source lang-java linenums">package tourGuide.distance;
+
+import gpsUtil.location.Location;
+import tourGuide.user.UserReward;
+
+import java.util.Comparator;
+
+public class Distance extends Location {
+    String attractionName;
+    double latitudeUser;
+    double longituteUser;
+    double distance;
+    int pointReward;
+
+    public Distance( String attractionName,double latitude, double longitude, double latitudeUser, double longituteUser, double distance,int pointReward) {
+<span class="fc" id="L16">        super(latitude, longitude);</span>
+<span class="fc" id="L17">        this.attractionName = attractionName;</span>
+<span class="fc" id="L18">        this.latitudeUser = latitudeUser;</span>
+<span class="fc" id="L19">        this.longituteUser = longituteUser;</span>
+<span class="fc" id="L20">        this.distance = distance;</span>
+<span class="fc" id="L21">        this.pointReward = pointReward;</span>
+<span class="fc" id="L22">    }</span>
+
+    public String getAttractionName() {
+<span class="fc" id="L25">        return attractionName;</span>
+    }
+
+    public void setAttractionName(String attractionName) {
+<span class="nc" id="L29">        this.attractionName = attractionName;</span>
+<span class="nc" id="L30">    }</span>
+
+    public double getLatitudeUser() {
+<span class="fc" id="L33">        return latitudeUser;</span>
+    }
+
+    public void setLatitudeUser(double latitudeUser) {
+<span class="nc" id="L37">        this.latitudeUser = latitudeUser;</span>
+<span class="nc" id="L38">    }</span>
+
+    public double getLongituteUser() {
+<span class="fc" id="L41">        return longituteUser;</span>
+    }
+
+    public void setLongituteUser(double longituteUser) {
+<span class="nc" id="L45">        this.longituteUser = longituteUser;</span>
+<span class="nc" id="L46">    }</span>
+
+    public double getDistance() {
+<span class="fc" id="L49">        return distance;</span>
+    }
+
+    public void setDistance(double distance) {
+<span class="nc" id="L53">        this.distance = distance;</span>
+<span class="nc" id="L54">    }</span>
+    public int getPointReward() {
+<span class="fc" id="L56">        return pointReward;</span>
+    }
+
+    public void setPointReward(int pointReward) {
+<span class="nc" id="L60">        this.pointReward = pointReward;</span>
+<span class="nc" id="L61">    }</span>
+
+<span class="fc" id="L63">    public static Comparator&lt;Distance&gt; distanceComparator = new Comparator&lt;Distance&gt;() {</span>
+        @Override
+        public int compare(Distance o1, Distance o2) {
+<span class="fc" id="L66">            return (int) (o1.getDistance() - o2.getDistance());</span>
+        }
+    };
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
