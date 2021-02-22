@@ -26,7 +26,7 @@ public class GpsUtilService{
     private GpsUtil gpsUtil = new GpsUtil();
 
     private RewardCentral rewardCentral = new RewardCentral();
-    private RewardsService rewardsService ;//= new RewardsService(gpsUtil,rewardCentral);
+    private RewardsService rewardsService ;
     private UserService userService = new UserService(gpsUtil,rewardsService);
 
     List<Attraction> attractions = new ArrayList<>();
