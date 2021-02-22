@@ -53,7 +53,7 @@ public class TestPerformance {
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 
 		// Users should be incremented up to 100,000, and test finishes within 15 minutes
-		InternalTestHelper.setInternalUserNumber(10);
+		InternalTestHelper.setInternalUserNumber(100);
 	    StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		UserService userService = new UserService(gpsUtil,rewardsService);
@@ -61,7 +61,12 @@ public class TestPerformance {
 		List<User> allUsers = new ArrayList<>();
 		allUsers = userService.getAllUsers();
 
-		userService.asynchroTrackUserLocation(allUsers);
+		//userService.asynchroTrackUserLocation(allUsers);
+		for (User user : allUsers){
+			userService.asynchroTrackUserLocation1(user);
+		}
+
+		userService.asynchroFinale();
 
 		stopWatch.stop();
 		userService.tracker.stopTracking();
@@ -77,7 +82,7 @@ public class TestPerformance {
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 
 		// Users should be incremented up to 100,000, and test finishes within 20 minutes
-		InternalTestHelper.setInternalUserNumber(10);
+		InternalTestHelper.setInternalUserNumber(10000);
 		UserService userService = new UserService(gpsUtil,rewardsService);
 
 
@@ -87,14 +92,15 @@ public class TestPerformance {
 
 		Attraction attraction = gpsUtil.getAttractions().get(0);
 		List<User> allUsers = userService.getAllUsers();
-		//allUsers = userService.getAllUsers();
 		allUsers.forEach(u -> u.addToVisitedLocations(new VisitedLocation(u.getUserId(), attraction, new Date())));
 
 		//on utilise la boucle avec la nouvelle methode asynchroCalculateRewards
 		for (User user: allUsers) {
-			rewardsService.asynchroCalculateRewardsTest(user);
+			rewardsService.asynchroCalculateRewrds(user);
 		}
-		
+
+		rewardsService.asynchroneFinaliseExecutor();
+
 		for(User user : allUsers) {
 			assertTrue(user.getUserRewards().size() > 0);
 		}

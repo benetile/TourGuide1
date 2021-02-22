@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="tourGuide.TestRewardsService" tests="3" skipped="0" failures="0" errors="0" timestamp="2021-02-22T17:35:28" hostname="LAPTOP-11GN0I3Q" time="5.014">
+  <properties/>
+  <testcase name="nearAllAttractions" classname="tourGuide.TestRewardsService" time="4.356"/>
+  <testcase name="userGetRewards" classname="tourGuide.TestRewardsService" time="0.643"/>
+  <testcase name="isWithinAttractionProximity" classname="tourGuide.TestRewardsService" time="0.011"/>
+  <system-out><![CDATA[18:35:28.774 [Test worker] INFO tourGuide.service.UserService - TestMode enabled
+18:35:28.774 [Test worker] DEBUG tourGuide.service.UserService - Initializing users
+18:35:28.961 [Test worker] DEBUG tourGuide.service.UserService - Created 10000 internal test users.
+18:35:28.961 [Test worker] DEBUG tourGuide.service.UserService - Finished initializing users
+18:35:28.963 [pool-9-thread-1] DEBUG tourGuide.tracker.Tracker - Begin Tracker. Tracking 10000 users.
+18:35:33.143 [Test worker] INFO tourGuide.service.UserService - TestMode enabled
+18:35:33.143 [Test worker] DEBUG tourGuide.service.UserService - Initializing users
+18:35:33.145 [Test worker] DEBUG tourGuide.service.UserService - Created 1 internal test users.
+18:35:33.145 [Test worker] DEBUG tourGuide.service.UserService - Finished initializing users
+18:35:33.147 [Test worker] INFO tourGuide.service.UserService - TestMode enabled
+18:35:33.148 [Test worker] DEBUG tourGuide.service.UserService - Initializing users
+18:35:33.155 [pool-13-thread-1] DEBUG tourGuide.tracker.Tracker - Begin Tracker. Tracking 1 users.
+18:35:33.160 [Test worker] DEBUG tourGuide.service.UserService - Created 0 internal test users.
+18:35:33.161 [Test worker] DEBUG tourGuide.service.UserService - Finished initializing users
+18:35:33.165 [pool-15-thread-1] DEBUG tourGuide.tracker.Tracker - Begin Tracker. Tracking 0 users.
+18:35:33.166 [pool-15-thread-1] DEBUG tourGuide.tracker.Tracker - Tracker Time Elapsed: 0 seconds.
+18:35:33.168 [pool-15-thread-1] DEBUG tourGuide.tracker.Tracker - Tracker sleeping
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

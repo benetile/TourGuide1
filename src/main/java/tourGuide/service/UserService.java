@@ -1,6 +1,7 @@
 package tourGuide.service;
 
 import gpsUtil.GpsUtil;
+import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import org.slf4j.Logger;
@@ -10,7 +11,9 @@ import tourGuide.helper.InternalTestHelper;
 import tourGuide.tracker.Tracker;
 import tourGuide.user.User;
 import tourGuide.user.UserReward;
+import tripPricer.TripPricer;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -22,14 +25,16 @@ import java.util.stream.IntStream;
 
 @Service
 public class UserService{
-
     private Logger logger = LoggerFactory.getLogger(UserService.class);
     public GpsUtil gpsUtil;
     public RewardsService rewardsService;
+    public TripPricer tripPricer;
     boolean testMode = true;
     public final Tracker tracker;
 
-    ExecutorService executorService = Executors.newFixedThreadPool(4);
+    private static final String tripPricerApiKey = "test-server-api-key";
+
+    ExecutorService executorService = Executors.newFixedThreadPool(5000);
     UUID userId;
     Location location1;
     Date timeVisited1;
@@ -72,9 +77,7 @@ public class UserService{
     }
 
     public VisitedLocation trackUserLocation(User user) {
-        //generateUserLocationHistory(user);
         VisitedLocation visitedLocation = getUserLocation(user);
-        //user.addToVisitedLocations(visitedLocation);
         rewardsService.calculateRewards(user);
         return visitedLocation;
     }
@@ -84,16 +87,33 @@ public class UserService{
         return user.getLastVisitedLocation();
     }
 
-    public List<UserReward> getUserRewards(User user) {
-        return user.getUserRewards();
+    public List<UserReward> getUserRewards(User user) throws InterruptedException {
+        List<UserReward> userRewards = new ArrayList<>();
+        List<Attraction> attractions = gpsUtil.getAttractions();
+        VisitedLocation visitedLocation = user.getLastVisitedLocation();
+
+        attractions.parallelStream().forEach(attraction -> {
+            UserReward userReward = new UserReward(visitedLocation,attraction,
+                    rewardsService.getRewardPoints(attraction,user));
+            userRewards.add(userReward);
+        });
+
+       /* for (Attraction attraction : gpsUtil.getAttractions()) {
+            Runnable runnableTask = () -> {
+                try {
+                    user.addUserReward(new UserReward(visitedLocation,attraction,
+                            rewardsService.getRewardPoints(attraction,user)));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            };
+            executorService.submit(runnableTask);
+        }*/
+        return userRewards;
     }
 
     public User getUser(String userName) {
         return internalUserMap.get(userName);
-    }
-
-    public User getUserById(UUID idUser){
-        return internalUserMap.get(idUser);
     }
 
     public List<User> getAllUsers() {
@@ -113,12 +133,12 @@ public class UserService{
         VisitedLocation lastVisiteLocation = new VisitedLocation(userId,location1,timeVisited1);
         for (User user : getAllUsers()) {
             for (VisitedLocation visitedLocation: user.getVisitedLocations()) {
-                    firstVisiteLocation = visitedLocation;
-                    for(VisitedLocation visitedLocation1 : user.getVisitedLocations()){
-                        if(firstVisiteLocation.timeVisited.after(visitedLocation1.timeVisited)){
-                            lastVisiteLocation = firstVisiteLocation;
-                        }
+                firstVisiteLocation = visitedLocation;
+                for(VisitedLocation visitedLocation1 : user.getVisitedLocations()){
+                    if(firstVisiteLocation.timeVisited.after(visitedLocation1.timeVisited)){
+                        lastVisiteLocation = firstVisiteLocation;
                     }
+                }
             }
             maptest.put(String.valueOf(lastVisiteLocation.userId),lastVisiteLocation.location);
             currentLocations.add(lastVisiteLocation);
@@ -132,6 +152,7 @@ public class UserService{
         });
 
     }
+
     public double generateRandomLongitude() {
         double leftLimit = -180;
         double rightLimit = 180;
@@ -149,34 +170,24 @@ public class UserService{
         return Date.from(localDateTime.toInstant(ZoneOffset.UTC));
     }
 
-    /**
-     * A revoir
-     */
-
     public void asynchroTrackUserLocation(List<User> users){
         users.parallelStream()
                 .forEach(user -> trackUserLocation(user));
     }
 
-    public void asynchroExecutor() throws InterruptedException {
-        executorService.shutdown();
-        executorService.awaitTermination(1,TimeUnit.SECONDS);
+    public void asynchroTrackUserLocation1(User user){
+        Runnable runTask = () -> {
+            try {
+                trackUserLocation(user);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        };
+        executorService.submit(runTask);
     }
 
-    Runnable task =()->{
-        List <User> users = getAllUsers();
-        for (User user : users) {
-            trackUserLocation(user);
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                System.out.println("Thread  interrupted.");
-            }
-        }
-    };
-
-
-
-
+    public void asynchroFinale() throws InterruptedException {
+        executorService.shutdown();
+        executorService.awaitTermination(250, TimeUnit.SECONDS);
+    }
 }

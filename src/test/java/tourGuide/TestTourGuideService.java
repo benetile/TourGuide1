@@ -116,7 +116,7 @@ public class TestTourGuideService {
 	public void getNearbyAttractions() {
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-		InternalTestHelper.setInternalUserNumber(0);
+		InternalTestHelper.setInternalUserNumber(5);
 		//TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 		UserService userService = new UserService(gpsUtil,rewardsService);
 		GpsUtilService gpsUtilService = new GpsUtilService(gpsUtil,rewardsService);
@@ -127,14 +127,14 @@ public class TestTourGuideService {
 		userService.generateUserLocationHistory(user);
 		VisitedLocation visitedLocation = userService.trackUserLocation(user);
 
-		List<Distance> attractions = gpsUtilService.getNearByAttractionsTest(visitedLocation);
+		List<Distance> attractions = gpsUtilService.getNearByAttractions(visitedLocation);
 		
 		userService.tracker.stopTracking();
 		
 		assertEquals(5, attractions.size());
 	}
 	
-	public void getTripDeals() {
+	public void getTripDeals() throws InterruptedException {
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		InternalTestHelper.setInternalUserNumber(0);

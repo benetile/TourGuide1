@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="tourGuide.TestPerformance" tests="2" skipped="0" failures="0" errors="0" timestamp="2021-02-04T11:56:09" hostname="LAPTOP-11GN0I3Q" time="1.542">
+<testsuite name="tourGuide.TestPerformance" tests="2" skipped="0" failures="0" errors="0" timestamp="2021-02-22T17:35:17" hostname="LAPTOP-11GN0I3Q" time="11.173">
   <properties/>
-  <testcase name="highVolumeTrackLocation" classname="tourGuide.TestPerformance" time="0.47"/>
-  <testcase name="highVolumeGetRewards" classname="tourGuide.TestPerformance" time="1.072"/>
-  <system-out><![CDATA[12:56:09.770 [Test worker] INFO tourGuide.service.UserService - TestMode enabled
-12:56:09.786 [Test worker] DEBUG tourGuide.service.UserService - Initializing users
-12:56:09.947 [Test worker] DEBUG tourGuide.service.UserService - Created 10 internal test users.
-12:56:09.947 [Test worker] DEBUG tourGuide.service.UserService - Finished initializing users
-12:56:09.959 [pool-2-thread-1] DEBUG tourGuide.tracker.Tracker - Begin Tracker. Tracking 10 users.
+  <testcase name="highVolumeTrackLocation" classname="tourGuide.TestPerformance" time="0.566"/>
+  <testcase name="highVolumeGetRewards" classname="tourGuide.TestPerformance" time="10.607"/>
+  <system-out><![CDATA[18:35:17.833 [Test worker] INFO tourGuide.service.UserService - TestMode enabled
+18:35:17.849 [Test worker] DEBUG tourGuide.service.UserService - Initializing users
+18:35:18.029 [Test worker] DEBUG tourGuide.service.UserService - Created 100 internal test users.
+18:35:18.029 [Test worker] DEBUG tourGuide.service.UserService - Finished initializing users
+18:35:18.047 [pool-3-thread-1] DEBUG tourGuide.tracker.Tracker - Begin Tracker. Tracking 100 users.
 highVolumeTrackLocation: Time Elapsed: 0 seconds.
-12:56:10.026 [Test worker] INFO tourGuide.service.UserService - TestMode enabled
-12:56:10.026 [Test worker] DEBUG tourGuide.service.UserService - Initializing users
-12:56:10.029 [Test worker] DEBUG tourGuide.service.UserService - Created 10 internal test users.
-12:56:10.029 [Test worker] DEBUG tourGuide.service.UserService - Finished initializing users
-12:56:10.033 [pool-4-thread-1] DEBUG tourGuide.tracker.Tracker - Begin Tracker. Tracking 10 users.
-12:56:10.103 [pool-2-thread-1] DEBUG tourGuide.tracker.Tracker - Tracker Time Elapsed: 0 seconds.
-12:56:10.103 [pool-2-thread-1] DEBUG tourGuide.tracker.Tracker - Tracker sleeping
-12:56:11.039 [pool-4-thread-1] DEBUG tourGuide.tracker.Tracker - Tracker Time Elapsed: 1 seconds.
-12:56:11.040 [pool-4-thread-1] DEBUG tourGuide.tracker.Tracker - Tracker sleeping
-highVolumeGetRewards: Time Elapsed: 1 seconds.
+18:35:18.144 [Test worker] INFO tourGuide.service.UserService - TestMode enabled
+18:35:18.144 [Test worker] DEBUG tourGuide.service.UserService - Initializing users
+18:35:18.367 [Test worker] DEBUG tourGuide.service.UserService - Created 10000 internal test users.
+18:35:18.368 [Test worker] DEBUG tourGuide.service.UserService - Finished initializing users
+18:35:18.371 [pool-6-thread-1] DEBUG tourGuide.tracker.Tracker - Begin Tracker. Tracking 10000 users.
+18:35:28.427 [pool-3-thread-1] DEBUG tourGuide.tracker.Tracker - Tracker Time Elapsed: 10 seconds.
+18:35:28.428 [pool-3-thread-1] DEBUG tourGuide.tracker.Tracker - Tracker sleeping
+highVolumeGetRewards: Time Elapsed: 10 seconds.
 ]]></system-out>
-  <system-err><![CDATA[févr. 04, 2021 12:56:09 PM org.javamoney.moneta.DefaultMonetaryContextFactory createMonetaryContextNonNullConfig
+  <system-err><![CDATA[févr. 22, 2021 6:35:17 PM org.javamoney.moneta.DefaultMonetaryContextFactory createMonetaryContextNonNullConfig
 INFOS: Using custom MathContext: precision=256, roundingMode=HALF_EVEN
 ]]></system-err>
 </testsuite>

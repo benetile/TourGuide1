@@ -8,94 +8,86 @@ import org.springframework.stereotype.Service;
 import rewardCentral.RewardCentral;
 import tourGuide.distance.Distance;
 import tourGuide.user.User;
+import tourGuide.user.UserReward;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Service
 public class GpsUtilService{
 
     private static final double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
 
-<span class="fc" id="L21">    private GpsUtil gpsUtil = new GpsUtil();</span>
+<span class="fc" id="L25">    ExecutorService executorService = Executors.newFixedThreadPool(100);</span>
+<span class="fc" id="L26">    private GpsUtil gpsUtil = new GpsUtil();</span>
 
-<span class="fc" id="L23">    private RewardCentral rewardCentral = new RewardCentral();</span>
-<span class="fc" id="L24">    private RewardsService rewardsService = new RewardsService(gpsUtil,rewardCentral);</span>
-<span class="fc" id="L25">    private UserService userService = new UserService(gpsUtil,rewardsService);</span>
+<span class="fc" id="L28">    private RewardCentral rewardCentral = new RewardCentral();</span>
+    private RewardsService rewardsService ;//= new RewardsService(gpsUtil,rewardCentral);
+<span class="fc" id="L30">    private UserService userService = new UserService(gpsUtil,rewardsService);</span>
 
-<span class="fc" id="L27">    List&lt;Attraction&gt; attractions = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L32">    List&lt;Attraction&gt; attractions = new ArrayList&lt;&gt;();</span>
 
-<span class="fc" id="L29">    public GpsUtilService( GpsUtil gpsUtil,RewardsService rewardsService) {</span>
-<span class="fc" id="L30">        this.rewardsService = rewardsService;</span>
-<span class="fc" id="L31">        this.gpsUtil = gpsUtil;</span>
-<span class="fc" id="L32">    }</span>
+<span class="fc" id="L34">    public GpsUtilService( GpsUtil gpsUtil,RewardsService rewardsService) {</span>
+<span class="fc" id="L35">        this.rewardsService = rewardsService;</span>
+<span class="fc" id="L36">        this.gpsUtil = gpsUtil;</span>
+<span class="fc" id="L37">    }</span>
 
     public Attraction addAttraction(Attraction attraction){
-<span class="nc bnc" id="L35" title="All 2 branches missed.">        if(attraction!=null){</span>
-<span class="nc" id="L36">            attractions.add(attraction);</span>
-<span class="nc" id="L37">            return attraction;</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">        if(attraction!=null){</span>
+<span class="nc" id="L41">            attractions.add(attraction);</span>
+<span class="nc" id="L42">            return attraction;</span>
         }
-<span class="nc" id="L39">        return null;</span>
+<span class="nc" id="L44">        return null;</span>
     }
 
     public List&lt;Attraction&gt;getAttractions(){
-<span class="fc bfc" id="L43" title="All 2 branches covered.">        for(Attraction attraction : gpsUtil.getAttractions()){</span>
-<span class="fc" id="L44">            attractions.add(attraction);</span>
-<span class="fc" id="L45">        }</span>
-<span class="fc" id="L46">        return attractions;</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        for(Attraction attraction : gpsUtil.getAttractions()){</span>
+<span class="fc" id="L49">            attractions.add(attraction);</span>
+<span class="fc" id="L50">        }</span>
+<span class="fc" id="L51">        return attractions;</span>
     }
 
     public Attraction getAttractionByName(String name){
-<span class="nc bnc" id="L50" title="All 2 branches missed.">        for (Attraction attraction : gpsUtil.getAttractions()) {</span>
-<span class="nc bnc" id="L51" title="All 2 branches missed.">            if(attraction.attractionName.equals(name)){</span>
-<span class="nc" id="L52">               return attraction;</span>
-                }
-<span class="nc" id="L54">            }</span>
-<span class="nc" id="L55">        return null;</span>
-    }
-
-    public List&lt;Attraction&gt; getNearByAttractions(VisitedLocation visitedLocation) {
-<span class="nc" id="L59">        List&lt;Attraction&gt; nearbyAttractions = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L60" title="All 2 branches missed.">        for(Attraction attraction : gpsUtil.getAttractions()) {</span>
-<span class="nc bnc" id="L61" title="All 2 branches missed.">            if(rewardsService.isWithinAttractionProximity(attraction, visitedLocation.location)) {</span>
-<span class="nc" id="L62">                nearbyAttractions.add(attraction);</span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        for (Attraction attraction : gpsUtil.getAttractions()) {</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">            if(attraction.attractionName.equals(name)){</span>
+<span class="nc" id="L57">                return attraction;</span>
             }
-<span class="nc" id="L64">        }</span>
-<span class="nc" id="L65">        return nearbyAttractions;</span>
+<span class="nc" id="L59">        }</span>
+<span class="nc" id="L60">        return null;</span>
     }
 
-    //
-    public List&lt;Distance&gt; getNearByAttractionsTest(VisitedLocation visitedLocation){
-<span class="fc" id="L70">        List&lt;Distance&gt; nearByAttractions = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L71">        User user = userService.getUserById(visitedLocation.userId);</span>
-        double distance ;
-<span class="fc bfc" id="L73" title="All 2 branches covered.">            for (Attraction attraction : gpsUtil.getAttractions()) {</span>
-<span class="fc" id="L74">                distance = calculDistance(new Location(attraction.latitude, attraction.longitude), visitedLocation.location);</span>
+    public List&lt;Distance&gt; getNearByAttractions(VisitedLocation visitedLocation){
+<span class="fc" id="L64">        List&lt;Distance&gt; nearByAttractions = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L65">        List&lt;Attraction&gt;attractions = gpsUtil.getAttractions();</span>
+<span class="fc" id="L66">        User user =userService.getAllUsers().get(0);</span>
 
-                //int point2 = rewardsService.getRewardPoints(attraction,user);
+<span class="fc" id="L68">        attractions.parallelStream().forEach(attraction -&gt; {</span>
+<span class="fc" id="L69">            double distance = calculDistance(new Location(attraction.latitude, attraction.longitude), visitedLocation.location);</span>
+<span class="fc" id="L70">            int point = rewardsService.getRewardPoints(attraction, user);</span>
 
-<span class="fc" id="L78">                int point = rewardCentral.getAttractionRewardPoints(attraction.attractionId,visitedLocation.userId);</span>
-<span class="fc" id="L79">                nearByAttractions.add(new Distance(attraction.attractionName, attraction.latitude, attraction.longitude,</span>
-                        visitedLocation.location.latitude,visitedLocation.location.longitude, distance,point));
-
-<span class="fc" id="L82">                Collections.sort(nearByAttractions, Distance.distanceComparator);</span>
-<span class="fc" id="L83">            }</span>
-<span class="fc" id="L84">        return nearByAttractions.subList(0,5);</span>
+<span class="fc" id="L72">            user.addDistance(new Distance(attraction.attractionName, attraction.latitude, attraction.longitude,</span>
+                    visitedLocation.location.latitude,visitedLocation.location.longitude, distance,point));
+<span class="fc" id="L74">        });</span>
+<span class="fc" id="L75">        Collections.sort(user.getDistances(), Distance.distanceComparator);</span>
+<span class="fc" id="L76">        return user.getDistances().subList(0,5);</span>
     }
 
     public Double calculDistance(Location loc1, Location loc2){
-<span class="fc" id="L88">        double lat1 = Math.toRadians(loc1.latitude);</span>
-<span class="fc" id="L89">        double lon1 = Math.toRadians(loc1.longitude);</span>
-<span class="fc" id="L90">        double lat2 = Math.toRadians(loc2.latitude);</span>
-<span class="fc" id="L91">        double lon2 = Math.toRadians(loc2.longitude);</span>
+<span class="fc" id="L80">        double lat1 = Math.toRadians(loc1.latitude);</span>
+<span class="fc" id="L81">        double lon1 = Math.toRadians(loc1.longitude);</span>
+<span class="fc" id="L82">        double lat2 = Math.toRadians(loc2.latitude);</span>
+<span class="fc" id="L83">        double lon2 = Math.toRadians(loc2.longitude);</span>
 
-<span class="fc" id="L93">        double angle = Math.acos(Math.sin(lat1) * Math.sin(lat2)</span>
-<span class="fc" id="L94">                + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon1 - lon2));</span>
+<span class="fc" id="L85">        double angle = Math.acos(Math.sin(lat1) * Math.sin(lat2)</span>
+<span class="fc" id="L86">                + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon1 - lon2));</span>
 
-<span class="fc" id="L96">        double nauticalMiles = 60 * Math.toDegrees(angle);</span>
-<span class="fc" id="L97">        double statuteMiles = STATUTE_MILES_PER_NAUTICAL_MILE * nauticalMiles;</span>
-<span class="fc" id="L98">        return statuteMiles;</span>
+<span class="fc" id="L88">        double nauticalMiles = 60 * Math.toDegrees(angle);</span>
+<span class="fc" id="L89">        double statuteMiles = STATUTE_MILES_PER_NAUTICAL_MILE * nauticalMiles;</span>
+<span class="fc" id="L90">        return statuteMiles;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

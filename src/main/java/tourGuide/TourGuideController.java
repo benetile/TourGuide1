@@ -22,75 +22,48 @@ import tripPricer.Provider;
 
 @RestController
 public class TourGuideController {
-
-	@Autowired
-	TourGuideService tourGuideService;
-
-	@Autowired
+    @Autowired
+    TourGuideService tourGuideService;
+    @Autowired
     GpsUtilService gpsUtilService;
-
-	@Autowired
+    @Autowired
     UserService userService;
 
     @RequestMapping("/")
     public String index() {
         return "Greetings from TourGuide!";
     }
-    
-    @RequestMapping("/getLocation") 
-    public String getLocation(@RequestParam(name = "userName") String userName) {
-    	VisitedLocation visitedLocation = userService.getUserLocation(getUser(userName));
-		return JsonStream.serialize(visitedLocation.location);
-    }
-    
-    //  TODO: Change this method to no longer return a List of Attractions.
- 	//  Instead: Get the closest five tourist attractions to the user - no matter how far away they are.
- 	//  Return a new JSON object that contains:
-    	// Name of Tourist attraction, 
-        // Tourist attractions lat/long, 
-        // The user's location lat/long, 
-        // The distance in miles between the user's location and each of the attractions.
-        // The reward points for visiting each Attraction.
-        //    Note: Attraction reward points can be gathered from RewardsCentral
 
-    @RequestMapping("/getNearbyAttractions") 
-    public String getNearbyAttractions(@RequestParam(name ="userName") String userName) {
-    	//VisitedLocation visitedLocation = userService.getUserLocation(getUser(user.getUserName()));
-        VisitedLocation visitedLocation= userService.getUserLocation(getUser(userName));
-        List<Distance> attractions = gpsUtilService.getNearByAttractionsTest(visitedLocation);
-    	return JsonStream.serialize(attractions);
+    @RequestMapping("/getLocation")
+    public String getLocation(@RequestParam(name = "userName") String userName) {
+        User user = userService.getUser(userName);
+        VisitedLocation visitedLocation = userService.getUserLocation(user);
+        return JsonStream.serialize(visitedLocation.location);
     }
-    @RequestMapping("/getRewards") 
-    public String getRewards(@RequestParam String userName) {
-    	return JsonStream.serialize(tourGuideService.getUserRewards(getUser(userName)));
+
+    @RequestMapping("/getNearbyAttractions")
+    public String getNearbyAttractions(@RequestParam(name ="userName") String userName) throws InterruptedException {
+        User user = userService.getUser(userName);
+        VisitedLocation visitedLocation= userService.getUserLocation(user);
+        List<Distance> attractions = gpsUtilService.getNearByAttractions(visitedLocation);
+        return JsonStream.serialize(attractions);
     }
-    
+
+    @RequestMapping("/getRewards")
+    public String getRewards(@RequestParam String userName) throws InterruptedException {
+        User user = userService.getUser(userName);
+        return JsonStream.serialize(userService.getUserRewards(user));
+    }
+
     @RequestMapping("/getAllCurrentLocations")
     public String getAllCurrentLocations() {
-        //List<VisitedLocation> testCurrent = userService.getAllLocationsUser();
         return JsonStream.serialize(userService.getAllLocationsUser());
-    	// TODO: Get a list of every user's most recent location as JSON
-    	//- Note: does not use gpsUtil to query for their current location, 
-    	//        but rather gathers the user's current location from their stored location history.
-    	//
-    	// Return object should be the just a JSON mapping of userId to Locations similar to:
-    	//     {
-    	//        "019b04a9-067a-4c76-8817-ee75088c3822": {"longitude":-48.188821,"latitude":74.84371} 
-    	//        ...
-    	//     }
-    	
-
     }
-    
+
     @RequestMapping("/getTripDeals")
-    public String getTripDeals(@RequestParam String userName) {
-    	List<Provider> providers = tourGuideService.getTripDeals(getUser(userName));
-    	return JsonStream.serialize(providers);
+    public String getTripDeals(@RequestParam String userName) throws InterruptedException {
+        User user = userService.getUser(userName);
+        List<Provider> providers = tourGuideService.getTripDeals(user);
+        return JsonStream.serialize(providers);
     }
-    
-    private User getUser(String userName) {
-    	return tourGuideService.getUser(userName);
-    }
-   
-
 }

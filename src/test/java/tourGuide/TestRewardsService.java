@@ -53,7 +53,7 @@ public class TestRewardsService {
 	
 	// Needs fixed - can throw ConcurrentModificationException
 	@Test
-	public void nearAllAttractions() {
+	public void nearAllAttractions() throws InterruptedException {
 		GpsUtil gpsUtil = new GpsUtil();
 		//GpsUtilService gpsUtilService = new GpsUtilService();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
@@ -64,14 +64,9 @@ public class TestRewardsService {
 
 		List<User> users = userService.getAllUsers();
 
-
-		rewardsService.calculateRewards(users.get(0));
 		List<UserReward> userRewards = userService.getUserRewards(users.get(0));
 		userService.tracker.stopTracking();
 
-		assertEquals(users.get(0).getUserRewards().size(),userRewards.size());
-		//assertEquals(gpsUtil.getAttractions().size(), userRewards.size());
-
-		//assertEquals(gpsUtilService.getAttractions().size(),userRewards.size());
+		assertEquals(gpsUtil.getAttractions().size(), userRewards.size());
 	}
 }
